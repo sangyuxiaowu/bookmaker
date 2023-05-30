@@ -74,8 +74,8 @@ namespace book
             foreach (var chapter in chapters)
             {
                 Console.WriteLine($"Downloading {i}/{chapters.Count} {chapter.Title} - {chapter.Url}");
-                // 判断文件是否存在
-                var filePath = $"download/chapter_{i}.txt";
+                // 判断文件是否存在， 文件名序号补零为了方便排序
+                var filePath = $"download/chapter_{i.ToString().PadLeft(4,'0')}.txt";
                 if (File.Exists(filePath))
                 {
                     Console.WriteLine($"File {filePath} already exists, skipping...");

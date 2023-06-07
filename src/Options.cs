@@ -73,6 +73,12 @@ namespace book
         [Option('w', "wait", Default =10, HelpText = "设置等待秒数，默认为 10")]
         public int Wait { get; set; }
 
+        /// <summary>
+        /// 开始章节，默认为 1
+        /// </summary>
+        [Option('b', "begin", Default =1, HelpText = "设置开始章节，默认为 0")]
+        public int Begin { get; set; }
+
     }
 
     /// <summary>
@@ -80,6 +86,13 @@ namespace book
     /// </summary>
     [Verb("make", HelpText = "合并章节生成单个文档")]
     class MakeOptions{
+        
+        /// <summary>
+        /// 书籍目录 json 文件
+        /// </summary>
+        [Option('j', "json", Default ="chapters.json", HelpText = "设置书籍目录 json 文件，默认为 chapters.json")]
+        public string? Json { get; set; }
+
         /// <summary>
         /// 书籍章节目录
         /// </summary>

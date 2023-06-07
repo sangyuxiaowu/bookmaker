@@ -27,12 +27,33 @@ namespace book
 
         static int MakeTxt(MakeOptions opts)
         {
+            // 判断 json 是否存在
+            if (!File.Exists(opts.Json))
+            {
+                Console.WriteLine($"File {opts.Json} not exists, exiting...");
+                return 1;
+            }
+
+            // 检查输出文件是否存在，存在则删除
+            if (File.Exists(opts.Output))
+            {
+                File.Delete(opts.Output);
+            }
+
+            var json = File.ReadAllText(opts.Json);
+            var chapters = JsonSerializer.Deserialize<List<Chapter>>(json);
+
             // 将 download 目录下的 txt 文件合并为1个
             var files = Directory.GetFiles(opts.Dir, "*.txt");
             var content = "";
             foreach (var file in files)
             {
-                content += File.ReadAllText(file);
+                // 通过文件名获取章节序号
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                var index = int.Parse(fileName.Split("_")[1]);
+                var chapter = chapters[index - 1];
+
+                content += $"\n{chapter.Title}\n\n{File.ReadAllText(file)}";
             }
             File.WriteAllText(opts.Output, content);
             return 0;
@@ -54,10 +75,15 @@ namespace book
             var json = File.ReadAllText(opts.Json);
             var chapters = JsonSerializer.Deserialize<List<Chapter>>(json);
 
-            // 遍历 chapters
+            // 遍历 chapters 支持从指定位置开始
             int i = 1;
             foreach (var chapter in chapters)
             {
+                if(opts.Begin > 1 && i < opts.Begin)
+                {
+                    i++;
+                    continue;
+                }
                 Console.WriteLine($"Downloading {i}/{chapters.Count} {chapter.Title} - {chapter.Url}");
                 // 判断文件是否存在， 文件名序号补零为了方便排序
                 var filePath = $"{opts.Dir}/chapter_{i.ToString().PadLeft(5, '0')}.txt";
@@ -69,8 +95,8 @@ namespace book
                 }
                 // 下载章节内容
                 var content = await DownloadChapter(chapter.Url, opts.Selector, opts.Next, opts.Regex);
-
-                content = $"\n{chapter.Title}\n\n{content}";
+                // 不包含章节标题 方便后面 epub 生成
+                //content = $"\n{chapter.Title}\n\n{content}";
                 // 保存到本地文件
                 await File.WriteAllTextAsync(filePath, content);
                 i++;
@@ -102,7 +128,7 @@ namespace book
             }
 
             // 检查是否有下一页
-            var has_next = doc.DocumentNode.SelectSingleNode(next);
+            var has_next = string.IsNullOrWhiteSpace(next)? null : doc.DocumentNode.SelectSingleNode(next);
             if (has_next != null)
             {
                 var nextUrl = has_next.GetAttributeValue("href", "");

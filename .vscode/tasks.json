@@ -20,6 +20,11 @@
             "args": [
                 "publish",
                 "${workspaceFolder}/src/BookMaker.csproj",
+                "-c=Release",
+                "-f=net7.0",
+                "-r=win-x64",
+                "-o=${workspaceFolder}/publish/win-x64",
+                "-p:PublishSingleFile=true",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

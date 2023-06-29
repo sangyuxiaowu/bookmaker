@@ -1,3 +1,3 @@
 #!/bin/bash
 
-dotnet publish -c Release -f net7.0 -r win-x64 -p:PublishSingleFile=true
+dotnet publish -c Release -f net7.0 -r win-x64 -o publish/win-x64 -p:PublishSingleFile=true

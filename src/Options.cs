@@ -1,6 +1,6 @@
 using CommandLine;
 
-namespace book
+namespace BookMaker
 {
     /// <summary>
     /// 获取指定URL书籍的目录列表，并生成目录文件

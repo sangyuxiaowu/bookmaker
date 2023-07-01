@@ -6,17 +6,16 @@ using HtmlAgilityPack;
 using CommandLine;
 using System.Text.RegularExpressions;
 
-namespace book
+namespace BookMaker
 {
     class Program
     {
         static int Main(string[] args)
         {
             // 根据参数执行不同的方法， 使用 CommandLineParser 实现参数传递
-
             return CommandLine.Parser.Default.ParseArguments<ListOptions, DownloadOptions, MakeOptions>(args)
             .MapResult(
-                (ListOptions opts) => MakeBookList(opts),
+                (ListOptions opts) => MakeBookList(opts).GetAwaiter().GetResult(),
                 (DownloadOptions opts) => MakeChapter(opts).GetAwaiter().GetResult(),
                 (MakeOptions opts) => MakeTxt(opts),
                 errs => 1);
@@ -111,8 +110,8 @@ namespace book
 
         static async Task<string> DownloadChapter(string url,string selector,string next, string regex)
         {
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(await HttpClientHelper.GetWebHtmlAsync(url));
             var contentHtml = doc.DocumentNode.SelectSingleNode(selector)?.InnerHtml;
             // html 转换为纯文本 p 标签转换为换行
 
@@ -149,11 +148,11 @@ namespace book
             return content;
         }
 
-        static int MakeBookList(ListOptions opts)
+        static async Task<int> MakeBookList(ListOptions opts)
         {
             var url = opts.Url;
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
+            var doc = new HtmlDocument();
+            doc.LoadHtml(await HttpClientHelper.GetWebHtmlAsync(url));
 
             // var doc = new HtmlDocument();
             // doc.Load("list.html");

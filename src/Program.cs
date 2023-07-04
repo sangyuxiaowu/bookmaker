@@ -1,4 +1,4 @@
-using CommandLine;
+﻿using CommandLine;
 using BookMaker.BookTool;
 
 
@@ -14,6 +14,7 @@ namespace BookMaker
                 async(ListOptions opts) => await BookScraper.MakeBookList(opts),
                 async(DownloadOptions opts) => await BookScraper.MakeChapter(opts),
                 async(MakeOptions opts) => await BookBuild.MakeBook(opts),
+                async(Txt2EpubOptions opts) => await Txt2Epub.MakeEpub(opts),
                 errs => Task.FromResult(1));
         }
     }

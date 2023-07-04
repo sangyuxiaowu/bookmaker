@@ -1,5 +1,6 @@
 
-
+namespace BookMaker
+{
 class Chapter
 {
     /// <summary>
@@ -10,4 +11,5 @@ class Chapter
     /// 章节URL
     /// </summary>
     public string Url { get; set; }
+    }
 }

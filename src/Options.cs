@@ -109,14 +109,38 @@ namespace BookMaker
         /// <summary>
         /// 书籍类型
         /// </summary>
-        [Option('t', "type", Default = BookType.Txt, HelpText = "设置书籍类型，默认为 txt")]
-        public BookType? Type { get; set; }
+        [Option('f', "Format", Default =BookType.Txt, HelpText = "设置书籍类型，默认为 txt")]
+        public BookType Format { get; set; }
 
         /// <summary>
         /// 书籍保存文件名
         /// </summary>
         [Option('o', "output", Default ="book.txt", HelpText = "设置书籍保存文件名，默认为 book.txt")]
         public string? Output { get; set; }
+
+        /// <summary>
+        /// 书籍标题
+        /// </summary>
+        [Option('t', "title", Default ="book", HelpText = "设置书籍标题，默认为 book")]
+        public string? Title { get; set; }
+
+        /// <summary>
+        /// 书籍作者
+        /// </summary>
+        [Option('a', "author", Default ="", HelpText = "设置书籍作者，默认为空")]
+        public string? Author { get; set; }
+
+        /// <summary>
+        /// 书籍简介
+        /// </summary>
+        [Option('i', "intro", Default ="", HelpText = "设置书籍简介，默认为空")]
+        public string? Intro { get; set; }
+
+        /// <summary>
+        /// 书籍封面
+        /// </summary>
+        [Option('c', "cover", Default ="", HelpText = "设置书籍封面，默认为空")]
+        public string? Cover { get; set; }
 
     }
 

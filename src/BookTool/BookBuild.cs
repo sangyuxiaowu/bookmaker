@@ -1,4 +1,5 @@
 using System.Text.Json;
+using NovelEpubMaker;
 
 namespace BookMaker.BookTool{
 
@@ -18,6 +19,20 @@ namespace BookMaker.BookTool{
                 File.Delete(opts.Output);
             }
 
+            return opts.Format switch
+            {
+                BookType.Txt => await MakeTxt(opts),
+                BookType.Epub => await MakeEpub(opts),
+                _ => MakeErr(opts),
+            };
+        }
+
+        static int MakeErr(MakeOptions opts){
+            Console.WriteLine($"Format {opts.Format} not supported");
+            return 1;
+        }
+
+        static async Task<int> MakeTxt(MakeOptions opts){
             var json = await File.ReadAllTextAsync(opts.Json);
             var chapters = JsonSerializer.Deserialize<List<Chapter>>(json);
 
@@ -34,6 +49,41 @@ namespace BookMaker.BookTool{
                 content += $"\n{chapter.Title}\n\n{await File.ReadAllTextAsync(file)}";
             }
             await File.WriteAllTextAsync(opts.Output, content);
+            return 0;
+        }
+
+        static async Task<int> MakeEpub(MakeOptions opts){
+            var json = await File.ReadAllTextAsync(opts.Json);
+            var chapters = JsonSerializer.Deserialize<List<Chapter>>(json);
+
+            var files = Directory.GetFiles(opts.Dir, "*.txt");
+            List<NovelContent> novellist = new List<NovelContent>();
+            foreach (var file in files)
+            {
+                // 通过文件名获取章节序号
+                var fileName = Path.GetFileNameWithoutExtension(file);
+                var index = int.Parse(fileName.Split("_")[1]);
+                var chapter = chapters[index - 1];
+
+                novellist.Add(new NovelContent{
+                    Title = chapter.Title,
+                    Content = await File.ReadAllTextAsync(file),
+                });
+            }
+
+            // 创建 epub 文件
+            var epub = new NovelEpub{
+                Metadata = new EpubMetadata{
+                    Title = opts.Title,
+                    Author = opts.Author,
+                    Description = opts.Intro,
+                },
+                NovelList = novellist,
+                CoverBase64 = string.IsNullOrEmpty(opts.Cover)? "":
+                    Convert.ToBase64String(await File.ReadAllBytesAsync(opts.Cover)),
+            };
+            var btyes = await epub.SaveBytesAsync();
+            await File.WriteAllBytesAsync(opts.Output, btyes);
             return 0;
         }
 

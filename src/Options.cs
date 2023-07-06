@@ -153,8 +153,20 @@ namespace BookMaker
         /// <summary>
         /// 书籍目录 json 文件
         /// </summary>
-        [Option('t', "txt", Default ="book.txt", HelpText = "设置书籍目录 txt 文件，默认为 book.txt")]
-        public string? Txt { get; set; }
+        [Option('f', "file", Required = true, HelpText = "设置要转换的 txt 文件")]
+        public string Txt { get; set; }
+
+        /// <summary>
+        /// 目录提取正则
+        /// </summary>
+        [Option('r', "regex", Default ="", HelpText = "设置目录提取正则，默认为空，使用内置正则")]
+        public string? Regex { get; set; }
+
+        /// <summary>
+        /// 是否为测试模式
+        /// </summary>
+        [Option('d', "debug", Default =false, HelpText = "设置是否为测试模式，默认为 false")]
+        public bool Debug { get; set; }
 
         /// <summary>
         /// 书籍保存文件名

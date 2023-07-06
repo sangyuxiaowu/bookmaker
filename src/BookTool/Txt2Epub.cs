@@ -14,10 +14,19 @@ namespace BookMaker.BookTool
             }
             // 对 TXT 文件进行章节提取
             var txt = await File.ReadAllTextAsync(opts.Txt);
-            var chapters = GetChapters(txt);
+            var chapters = GetChapters(txt, opts.Regex);
             if(chapters.Count == 0){
                 Console.WriteLine($"No chapters found in {opts.Txt}, exiting...");
                 return 1;
+            }
+            if(opts.Debug){
+                Console.WriteLine($"Chapters List:");
+                var i = 0;
+                foreach(var chapter in chapters){
+                    Console.WriteLine($"Chapter {(++i).ToString().PadLeft(5, '0')}: {chapter.Title}");
+                    //Console.WriteLine($"Content: {chapter.Content}");
+                }
+                return 0;
             }
             // 生成 epub 文件
             var epub = new NovelEpub{
@@ -41,10 +50,10 @@ namespace BookMaker.BookTool
         /// </summary>
         /// <param name="txt">文本内容</param>
         /// <returns>章节信息</returns>
-        static List<NovelContent> GetChapters(string txt){
+        static List<NovelContent> GetChapters(string txt, string regex = ""){
             var chapters = new List<NovelContent>();
-            var pattern = @"\s*第\s*[0-9一二三四五六七八九十零〇百千万两]+\s*[部章节回]\s*.*\s*";
-            var matches = Regex.Matches(txt, pattern);
+            var pattern = string.IsNullOrWhiteSpace(regex) ? @"^\s*第\s*[0-9一二三四五六七八九十零〇百千万两]+\s*[卷部章节回]\s*.{0,30}\s*$" : regex;
+            var matches = Regex.Matches(txt, pattern, RegexOptions.Multiline);
             if(matches.Count < 2){
                 return chapters;
             }
@@ -60,11 +69,20 @@ namespace BookMaker.BookTool
             }
             // 处理章节内容
             for(var i = 0; i < matches.Count; i++){
-                var chapter = new NovelContent{
-                    Title = matches[i].Value.Trim(),
-                    Content = (i==matches.Count-1) ? txt[matches[i].Index..] : txt[matches[i].Index..matches[i + 1].Index]
-                };
-                chapters.Add(chapter);
+                var title = matches[i].Value.Trim();
+                var content = (i==matches.Count-1) ? txt[matches[i].Index..] : txt[matches[i].Index..matches[i + 1].Index];
+                // 去除章节标题
+                content = content.Replace(title, "").Trim();
+
+                // 章节连2个字都不到，丢弃吧
+                if(content.Trim().Length < 2){
+                    continue;
+                }
+
+                chapters.Add(new NovelContent{
+                    Title = title,
+                    Content = content,
+                });
             }
             return chapters;
         }

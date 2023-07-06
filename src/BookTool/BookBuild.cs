@@ -1,4 +1,5 @@
 using System.Text.Json;
+using BookMaker.Utils;
 using NovelEpubMaker;
 
 namespace BookMaker.BookTool{
@@ -72,17 +73,7 @@ namespace BookMaker.BookTool{
             }
 
             // 创建 epub 文件
-            var epub = new NovelEpub{
-                Metadata = new EpubMetadata{
-                    Title = opts.Title,
-                    Author = opts.Author,
-                    Description = opts.Intro,
-                },
-                NovelList = novellist,
-                CoverBase64 = string.IsNullOrEmpty(opts.Cover)? "":
-                    Convert.ToBase64String(await File.ReadAllBytesAsync(opts.Cover)),
-            };
-            var btyes = await epub.SaveBytesAsync();
+            var btyes = await EpubHelper.MakeEpub(opts.Title,novellist,opts.Author,opts.Intro,opts.Cover);
             await File.WriteAllBytesAsync(opts.Output, btyes);
             return 0;
         }

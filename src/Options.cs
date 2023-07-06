@@ -144,58 +144,6 @@ namespace BookMaker
 
     }
 
-
-    /// <summary>
-    /// 生成 epub 文件
-    /// </summary>
-    [Verb("epub", HelpText = "生成 epub 文件")]
-    internal class EpubOptions{
-        
-        /// <summary>
-        /// 书籍目录 json 文件
-        /// </summary>
-        [Option('j', "json", Default ="chapters.json", HelpText = "设置书籍目录 json 文件，默认为 chapters.json")]
-        public string? Json { get; set; }
-
-        /// <summary>
-        /// 书籍章节目录
-        /// </summary>
-        [Option('d', "dir", Default ="download", HelpText = "设置书籍章节目录，默认为 download")]
-        public string? Dir { get; set; }
-
-        /// <summary>
-        /// 书籍保存文件名
-        /// </summary>
-        [Option('o', "output", Default ="book.epub", HelpText = "设置书籍保存文件名，默认为 book.epub")]
-        public string? Output { get; set; }
-
-        /// <summary>
-        /// 书籍标题
-        /// </summary>
-        [Option('t', "title", Default ="book", HelpText = "设置书籍标题，默认为 book")]
-        public string? Title { get; set; }
-
-        /// <summary>
-        /// 书籍作者
-        /// </summary>
-        [Option('a', "author", Default ="", HelpText = "设置书籍作者，默认为空")]
-        public string? Author { get; set; }
-
-        /// <summary>
-        /// 书籍简介
-        /// </summary>
-        [Option('i', "intro", Default ="", HelpText = "设置书籍简介，默认为空")]
-        public string? Intro { get; set; }
-
-        /// <summary>
-        /// 书籍封面
-        /// </summary>
-        [Option('c', "cover", Default ="", HelpText = "设置书籍封面，默认为空")]
-        public string? Cover { get; set; }
-
-    }
-
-
     /// <summary>
     /// txt 转 epub 文件
     /// </summary>

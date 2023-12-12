@@ -8,7 +8,7 @@ namespace BookMaker
     [Verb("list", HelpText = "获取书籍列表")]
     internal class ListOptions {
         /// <summary>
-        /// 配置ASSK和证书信息
+        /// 书籍URL
         /// </summary>
         [Option('u', "url", Required = true, HelpText = "设置书籍URL")]
         public string? Url { get; set; }

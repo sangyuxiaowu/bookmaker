@@ -76,6 +76,13 @@ namespace BookMaker.BookTool{
                 content = Regex.Replace(content, regex, "");
             }
 
+            // 删除大于四个的空格
+            content = Regex.Replace(content, " {4,}", "");
+            // 删除多余的换行，最多空出1行空行
+            content = Regex.Replace(content, "\n{3,}", "\n\n");
+            // 去除多余的html内容
+            content = Regex.Replace(content, "<.*?>", "").Trim();
+
             // 检查是否有下一页
             var has_next = string.IsNullOrWhiteSpace(next)? null : doc.DocumentNode.SelectSingleNode(next);
             if (has_next != null)

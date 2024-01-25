@@ -107,6 +107,12 @@ namespace BookMaker
         public string? Dir { get; set; }
 
         /// <summary>
+        /// 添加章节序号
+        /// </summary>
+        [Option('n', "number", Default =false, HelpText = "设置是否添加章节序号，默认为 false")]
+        public bool Number { get; set; }
+
+        /// <summary>
         /// 书籍类型
         /// </summary>
         [Option('f', "Format", Default =BookType.Txt, HelpText = "设置书籍类型，默认为 txt")]

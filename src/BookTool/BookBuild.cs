@@ -46,8 +46,14 @@ namespace BookMaker.BookTool{
                 var fileName = Path.GetFileNameWithoutExtension(file);
                 var index = int.Parse(fileName.Split("_")[1]);
                 var chapter = chapters[index - 1];
-
-                content += $"\n{chapter.Title}\n\n{await File.ReadAllTextAsync(file)}";
+                if (opts.Number)
+                {
+                    content += $"\n第{index}章 {chapter.Title}\n\n{await File.ReadAllTextAsync(file)}";
+                }
+                else
+                {
+                    content += $"\n{chapter.Title}\n\n{await File.ReadAllTextAsync(file)}";
+                }
             }
             await File.WriteAllTextAsync(opts.Output, content);
             return 0;
@@ -67,7 +73,7 @@ namespace BookMaker.BookTool{
                 var chapter = chapters[index - 1];
 
                 novellist.Add(new NovelContent{
-                    Title = chapter.Title,
+                    Title = opts.Number ? $"第{index}章 {chapter.Title}" : chapter.Title,
                     Content = await File.ReadAllTextAsync(file),
                 });
             }

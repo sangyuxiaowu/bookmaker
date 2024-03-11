@@ -7,9 +7,9 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/BookMaker.csproj",
+                "${workspaceFolder}/bookmaker.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -19,14 +19,9 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/BookMaker.csproj",
-                "-c=Release",
-                "-f=net8.0",
-                "-r=win-x64",
-                "-o=${workspaceFolder}/publish/win-x64",
-                "-p:PublishSingleFile=true",
+                "${workspaceFolder}/bookmaker.sln",
                 "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -38,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/src/BookMaker.csproj"
+                "${workspaceFolder}/bookmaker.sln"
             ],
             "problemMatcher": "$msCompile"
         }

@@ -63,6 +63,12 @@ namespace BookMaker.BookTool{
             var doc = new HtmlDocument();
             doc.LoadHtml(await HttpClientHelper.GetWebHtmlAsync(url));
             var contentHtml = doc.DocumentNode.SelectSingleNode(selector)?.InnerHtml;
+            if (contentHtml == null)
+            {
+                Console.WriteLine($"Selector {selector} not found, place check the url {url} and selector.");
+                return "";
+            }
+
             // html 转换为纯文本 p 标签转换为换行
 
             var content = HtmlEntity.DeEntitize(contentHtml)
@@ -115,6 +121,11 @@ namespace BookMaker.BookTool{
             // doc.Load("list.html");
 
             var chapterNodes = doc.DocumentNode.SelectNodes(opts.Selector);
+            if (chapterNodes == null)
+            {
+                Console.WriteLine($"Selector {opts.Selector} not found, exiting...");
+                return 1;
+            }
             var chapters = chapterNodes.Select(node => new Chapter
             {
                 Title = node.InnerText.Trim(),
